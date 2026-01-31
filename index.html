@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laravel Interview Prep</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .fade-in { animation: fadeIn 0.3s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 min-h-screen text-white">
+    <div class="container mx-auto px-4 py-8 max-w-4xl">
+        <header class="text-center mb-8">
+            <h1 class="text-4xl font-bold mb-2 bg-gradient-to-r from-red-400 to-pink-400 bg-clip-text text-transparent">Laravel Interview Prep</h1>
+            <p class="text-slate-400">50 Questions • Fundamentals to Advanced</p>
+        </header>
+
+        <div id="app"></div>
+    </div>
+
+    <script>
+        const questions = [
+            // Fundamentals (1-10)
+            {
+                category: "Fundamentals",
+                question: "What is the purpose of the `artisan` command in Laravel?",
+                options: [
+                    "A) Package manager for Laravel",
+                    "B) Command-line interface for Laravel tasks",
+                    "C) Database management tool only",
+                    "D) Frontend build tool"
+                ],
+                correct: 1,
+                explanation: "Artisan is Laravel's CLI that provides helpful commands for development tasks like migrations, seeding, generating boilerplate code, clearing caches, and running queues."
+            },
+            {
+                category: "Fundamentals",
+                question: "What does the `.env` file contain in a Laravel application?",
+                options: [
+                    "A) Route definitions",
+                    "B) Environment-specific configuration variables",
+                    "C) Database migrations",
+                    "D) Blade templates"
+                ],
+                correct: 1,
+                explanation: "The .env file stores environment-specific configuration like database credentials, API keys, and app settings. It should never be committed to version control."
+            },
+            {
+                category: "Fundamentals",
+                question: "Which directory contains Laravel's route definitions?",
+                options: [
+                    "A) app/Routes",
+                    "B) routes/",
+                    "C) config/routes",
+                    "D) resources/routes"
+                ],
+                correct: 1,
+                explanation: "The routes/ directory contains web.php, api.php, console.php, and channels.php for different route types."
+            },
+            {
+                category: "Fundamentals",
+                question: "What is a Service Provider in Laravel?",
+                options: [
+                    "A) A third-party API integration",
+                    "B) The central place to configure and bootstrap application services",
+                    "C) A type of middleware",
+                    "D) A database driver"
+                ],
+                correct: 1,
+                explanation: "Service Providers are the central place for bootstrapping Laravel applications. They register bindings in the service container, event listeners, middleware, and routes."
+            },
+            {
+                category: "Fundamentals",
+                question: "What is the default database connection in a fresh Laravel installation?",
+                options: [
+                    "A) PostgreSQL",
+                    "B) SQLite",
+                    "C) MySQL",
+                    "D) SQL Server"
+                ],
+                correct: 2,
+                explanation: "Laravel defaults to MySQL, but as of Laravel 11, SQLite is often used for local development. The connection is configured in .env via DB_CONNECTION."
+            },
+            {
+                category: "Fundamentals",
+                question: "What is the purpose of `composer.json` in Laravel?",
+                options: [
+                    "A) Define frontend dependencies",
+                    "B) Define PHP dependencies and autoloading",
+                    "C) Store environment variables",
+                    "D) Configure the web server"
+                ],
+                correct: 1,
+                explanation: "composer.json defines PHP package dependencies, autoloading rules (PSR-4), scripts, and project metadata for Composer package manager."
+            },
+            {
+                category: "Fundamentals",
+                question: "Which command creates a new Laravel project?",
+                options: [
+                    "A) php artisan new project",
+                    "B) composer create-project laravel/laravel project",
+                    "C) npm create laravel project",
+                    "D) laravel install project"
+                ],
+                correct: 1,
+                explanation: "Use `composer create-project laravel/laravel project-name` or `laravel new project-name` (if Laravel installer is globally installed)."
+            },
+            {
+                category: "Fundamentals",
+                question: "What is the purpose of the `public/` directory?",
+                options: [
+                    "A) Store private configuration",
+                    "B) Web server document root with index.php entry point",
+                    "C) Store database files",
+                    "D) Cache compiled views"
+                ],
+                correct: 1,
+                explanation: "The public/ directory is the web server's document root. It contains index.php (the entry point), assets (CSS, JS, images), and .htaccess for Apache."
+            },
+            {
+                category: "Fundamentals",
+                question: "What does MVC stand for in Laravel's architecture?",
+                options: [
+                    "A) Model-View-Controller",
+                    "B) Multiple-View-Component",
+                    "C) Model-Variable-Class",
+                    "D) Module-View-Container"
+                ],
+                correct: 0,
+                explanation: "MVC (Model-View-Controller) separates application logic: Models handle data, Views handle presentation, Controllers handle request logic."
+            },
+            {
+                category: "Fundamentals",
+                question: "Where are Blade template files stored by default?",
+                options: [
+                    "A) app/Views",
+                    "B) resources/views",
+                    "C) public/views",
+                    "D) storage/views"
+                ],
+                correct: 1,
+                explanation: "Blade templates are stored in resources/views/ with .blade.php extension. Compiled views are cached in storage/framework/views/."
+            },
+
+            // Routing & Controllers (11-18)
+            {
+                category: "Routing & Controllers",
+                question: "What is Route Model Binding in Laravel?",
+                options: [
+                    "A) Binding routes to specific domains",
+                    "B) Automatically injecting model instances into routes based on URI parameters",
+                    "C) Creating routes from database records",
+                    "D) Binding multiple routes together"
+                ],
+                correct: 1,
+                explanation: "Route Model Binding automatically resolves Eloquent models from route parameters. Laravel injects the model instance matching the route segment (e.g., /users/{user} injects User model)."
+            },
+            {
+                category: "Routing & Controllers",
+                question: "What is the difference between `Route::get()` and `Route::post()`?",
+                options: [
+                    "A) No difference, they're interchangeable",
+                    "B) get() handles HTTP GET requests, post() handles HTTP POST requests",
+                    "C) get() is faster than post()",
+                    "D) post() is for API routes only"
+                ],
+                correct: 1,
+                explanation: "Route::get() handles HTTP GET requests (retrieving data), while Route::post() handles POST requests (submitting data). Each corresponds to the HTTP method."
+            },
+            {
+                category: "Routing & Controllers",
+                question: "What does `php artisan route:list` do?",
+                options: [
+                    "A) Creates new routes",
+                    "B) Displays all registered routes with their methods, URIs, and actions",
+                    "C) Deletes unused routes",
+                    "D) Optimizes route performance"
+                ],
+                correct: 1,
+                explanation: "route:list displays a table of all registered routes showing HTTP methods, URIs, names, actions (controller@method), and middleware."
+            },
+            {
+                category: "Routing & Controllers",
+                question: "What is a Resource Controller?",
+                options: [
+                    "A) A controller that manages server resources",
+                    "B) A controller with predefined CRUD action methods",
+                    "C) A controller for static files",
+                    "D) A controller for API authentication"
+                ],
+                correct: 1,
+                explanation: "Resource controllers provide index, create, store, show, edit, update, and destroy methods for CRUD operations. Created with `php artisan make:controller --resource`."
+            },
+            {
+                category: "Routing & Controllers",
+                question: "How do you define a route group with a common prefix?",
+                options: [
+                    "A) Route::prefix('admin')->group(function() {...})",
+                    "B) Route::group('admin', function() {...})",
+                    "C) Route::admin()->group(function() {...})",
+                    "D) Route::common('admin')->routes(function() {...})"
+                ],
+                correct: 0,
+                explanation: "Route::prefix('admin') adds a URI prefix to all routes within the group. Can be combined with middleware(), namespace(), and name() for comprehensive grouping."
+            },
+            {
+                category: "Routing & Controllers",
+                question: "What is the purpose of named routes?",
+                options: [
+                    "A) To make URLs shorter",
+                    "B) To generate URLs and redirects using route names instead of hardcoded paths",
+                    "C) To restrict route access",
+                    "D) To cache routes"
+                ],
+                correct: 1,
+                explanation: "Named routes allow generating URLs with route('name') and redirects with redirect()->route('name'). Changes to URIs don't require updating every reference."
+            },
+            {
+                category: "Routing & Controllers",
+                question: "What does `Route::fallback()` do?",
+                options: [
+                    "A) Redirects to the previous page",
+                    "B) Defines a route that catches all unmatched requests",
+                    "C) Falls back to a different controller",
+                    "D) Retries failed routes"
+                ],
+                correct: 1,
+                explanation: "Route::fallback() defines a catch-all route executed when no other route matches. Useful for custom 404 pages or SPA fallbacks."
+            },
+            {
+                category: "Routing & Controllers",
+                question: "How do you apply middleware to a controller's constructor?",
+                options: [
+                    "A) $this->middleware('auth')",
+                    "B) middleware('auth')",
+                    "C) use AuthMiddleware",
+                    "D) @middleware('auth')"
+                ],
+                correct: 0,
+                explanation: "In the controller's __construct() method, call $this->middleware('auth') to apply middleware. Can use ->only() or ->except() to limit to specific methods."
+            },
+
+            // Eloquent ORM (19-28)
+            {
+                category: "Eloquent ORM",
+                question: "What is the difference between `find()` and `findOrFail()`?",
+                options: [
+                    "A) No difference",
+                    "B) find() returns null if not found, findOrFail() throws ModelNotFoundException",
+                    "C) findOrFail() is slower",
+                    "D) find() only works with integers"
+                ],
+                correct: 1,
+                explanation: "find() returns null when no record is found, while findOrFail() throws a ModelNotFoundException (which results in a 404 response). Use findOrFail() when the record must exist."
+            },
+            {
+                category: "Eloquent ORM",
+                question: "What is Eager Loading and why is it important?",
+                options: [
+                    "A) Loading models before they're needed for faster initial load",
+                    "B) Loading relationships upfront to prevent N+1 query problems",
+                    "C) Loading all database tables at startup",
+                    "D) A caching mechanism for queries"
+                ],
+                correct: 1,
+                explanation: "Eager loading (with() method) loads relationships in a single query instead of one query per model, solving the N+1 problem. Example: User::with('posts')->get()."
+            },
+            {
+                category: "Eloquent ORM",
+                question: "What is the difference between `hasOne` and `belongsTo`?",
+                options: [
+                    "A) They're the same relationship",
+                    "B) hasOne defines the parent side, belongsTo defines the child side (where FK exists)",
+                    "C) hasOne is for one-to-many, belongsTo is for one-to-one",
+                    "D) belongsTo is deprecated"
+                ],
+                correct: 1,
+                explanation: "hasOne is defined on the parent model (e.g., User hasOne Phone), while belongsTo is on the child model containing the foreign key (Phone belongsTo User)."
+            },
+            {
+                category: "Eloquent ORM",
+                question: "What does the `$fillable` property do in a model?",
+                options: [
+                    "A) Defines which columns can be mass assigned",
+                    "B) Lists required database columns",
+                    "C) Specifies columns to always select",
+                    "D) Defines default values"
+                ],
+                correct: 0,
+                explanation: "$fillable whitelists attributes that can be mass assigned (via create(), update(), fill()). This protects against mass assignment vulnerabilities. Opposite of $guarded."
+            },
+            {
+                category: "Eloquent ORM",
+                question: "What is a polymorphic relationship?",
+                options: [
+                    "A) A relationship between multiple databases",
+                    "B) A relationship where a model can belong to multiple types of models",
+                    "C) A self-referencing relationship",
+                    "D) A relationship with conditions"
+                ],
+                correct: 1,
+                explanation: "Polymorphic relationships allow a model to belong to multiple model types using a single association. Example: Comments can belong to Posts or Videos using commentable_type and commentable_id."
+            },
+            {
+                category: "Eloquent ORM",
+                question: "What is the purpose of `$casts` property?",
+                options: [
+                    "A) Convert models to arrays",
+                    "B) Automatically cast attributes to native PHP types",
+                    "C) Define database column types",
+                    "D) Cast queries to raw SQL"
+                ],
+                correct: 1,
+                explanation: "$casts automatically converts attributes when accessing them. Example: 'is_active' => 'boolean', 'options' => 'array', 'created_at' => 'datetime:Y-m-d'."
+            },
+            {
+                category: "Eloquent ORM",
+                question: "What is a Query Scope?",
+                options: [
+                    "A) A way to limit database connections",
+                    "B) Reusable query constraints defined in the model",
+                    "C) Database transaction boundaries",
+                    "D) Query result limits"
+                ],
+                correct: 1,
+                explanation: "Scopes are reusable query constraints. Local scopes (scopeActive) are called as User::active(). Global scopes automatically apply to all queries on a model."
+            },
+            {
+                category: "Eloquent ORM",
+                question: "What does `withTrashed()` do?",
+                options: [
+                    "A) Deletes records permanently",
+                    "B) Includes soft-deleted records in query results",
+                    "C) Empties the trash folder",
+                    "D) Marks records as trashed"
+                ],
+                correct: 1,
+                explanation: "withTrashed() includes soft-deleted records in results. Use onlyTrashed() for only deleted records. Requires SoftDeletes trait and deleted_at column."
+            },
+            {
+                category: "Eloquent ORM",
+                question: "What is the difference between `save()` and `create()`?",
+                options: [
+                    "A) save() is for updates only",
+                    "B) save() works on instances, create() is static and mass assigns attributes",
+                    "C) create() is faster",
+                    "D) They're identical"
+                ],
+                correct: 1,
+                explanation: "save() is called on a model instance ($user->save()), while create() is static and mass assigns (User::create([...])). create() requires $fillable to be set."
+            },
+            {
+                category: "Eloquent ORM",
+                question: "What are Eloquent Accessors and Mutators?",
+                options: [
+                    "A) Database access control methods",
+                    "B) Methods to transform attribute values when getting/setting",
+                    "C) Query optimization techniques",
+                    "D) Relationship types"
+                ],
+                correct: 1,
+                explanation: "Accessors transform values when retrieved (get{Attribute}Attribute or Attribute::get()). Mutators transform before saving (set{Attribute}Attribute or Attribute::set())."
+            },
+
+            // Migrations & Database (29-35)
+            {
+                category: "Migrations & Database",
+                question: "What command runs pending migrations?",
+                options: [
+                    "A) php artisan db:migrate",
+                    "B) php artisan migrate",
+                    "C) php artisan migration:run",
+                    "D) php artisan database:update"
+                ],
+                correct: 1,
+                explanation: "php artisan migrate runs all pending migrations. Use migrate:rollback to undo, migrate:fresh to drop all tables and re-run, migrate:status to check status."
+            },
+            {
+                category: "Migrations & Database",
+                question: "What is the purpose of database seeders?",
+                options: [
+                    "A) To create database indexes",
+                    "B) To populate database with test/initial data",
+                    "C) To optimize database performance",
+                    "D) To backup the database"
+                ],
+                correct: 1,
+                explanation: "Seeders populate the database with test or initial data. Run with php artisan db:seed. Often used with Factories for generating fake data."
+            },
+            {
+                category: "Migrations & Database",
+                question: "What does `php artisan migrate:fresh` do?",
+                options: [
+                    "A) Creates a new migration file",
+                    "B) Drops all tables and re-runs all migrations",
+                    "C) Runs only new migrations",
+                    "D) Refreshes the migration cache"
+                ],
+                correct: 1,
+                explanation: "migrate:fresh drops ALL tables (not just migration-managed ones) and runs all migrations from scratch. Use migrate:refresh to rollback and re-run instead."
+            },
+            {
+                category: "Migrations & Database",
+                question: "How do you add a foreign key constraint in a migration?",
+                options: [
+                    "A) $table->foreign('user_id')->references('id')->on('users')",
+                    "B) $table->foreignKey('user_id', 'users.id')",
+                    "C) $table->constraint('user_id')->to('users')",
+                    "D) $table->link('user_id')->with('users.id')"
+                ],
+                correct: 0,
+                explanation: "Use ->foreign()->references()->on() or the shorthand ->foreignId('user_id')->constrained() which assumes 'users' table and 'id' column."
+            },
+            {
+                category: "Migrations & Database",
+                question: "What is the purpose of the `migrations` table?",
+                options: [
+                    "A) Store migration file contents",
+                    "B) Track which migrations have been run",
+                    "C) Store database schema",
+                    "D) Log migration errors"
+                ],
+                correct: 1,
+                explanation: "The migrations table records which migrations have run and their batch number. This prevents running the same migration twice and enables rollbacks by batch."
+            },
+            {
+                category: "Migrations & Database",
+                question: "What is a Model Factory?",
+                options: [
+                    "A) A pattern for creating model instances",
+                    "B) A class that generates fake model data for testing/seeding",
+                    "C) A factory design pattern implementation",
+                    "D) A model generator command"
+                ],
+                correct: 1,
+                explanation: "Factories define how to generate fake model data using Faker. Example: User::factory()->count(10)->create() creates 10 users with realistic fake data."
+            },
+            {
+                category: "Migrations & Database",
+                question: "How do you create a nullable column in a migration?",
+                options: [
+                    "A) $table->string('name', null)",
+                    "B) $table->string('name')->nullable()",
+                    "C) $table->nullableString('name')",
+                    "D) $table->string('name')->allowNull()"
+                ],
+                correct: 1,
+                explanation: "Chain ->nullable() to make a column nullable. Example: $table->string('middle_name')->nullable(). Default columns are NOT NULL."
+            },
+
+            // Middleware & Security (36-42)
+            {
+                category: "Middleware & Security",
+                question: "What is middleware in Laravel?",
+                options: [
+                    "A) Database connection layer",
+                    "B) HTTP request/response filtering mechanism",
+                    "C) View rendering engine",
+                    "D) API wrapper"
+                ],
+                correct: 1,
+                explanation: "Middleware filters HTTP requests entering your application. Examples: authentication checks, CORS headers, logging, rate limiting. Can run before or after the request."
+            },
+            {
+                category: "Middleware & Security",
+                question: "What does CSRF protection prevent?",
+                options: [
+                    "A) SQL injection attacks",
+                    "B) Cross-Site Request Forgery attacks",
+                    "C) XSS attacks",
+                    "D) Brute force attacks"
+                ],
+                correct: 1,
+                explanation: "CSRF protection prevents attackers from tricking authenticated users into submitting malicious requests. Laravel uses tokens (@csrf in forms) verified by VerifyCsrfToken middleware."
+            },
+            {
+                category: "Middleware & Security",
+                question: "How do you hash a password in Laravel?",
+                options: [
+                    "A) md5($password)",
+                    "B) Hash::make($password)",
+                    "C) encrypt($password)",
+                    "D) password_hash($password)"
+                ],
+                correct: 1,
+                explanation: "Hash::make() uses bcrypt by default (configurable). Verify with Hash::check($plain, $hashed). Never use md5/sha1 for passwords—they're not secure."
+            },
+            {
+                category: "Middleware & Security",
+                question: "What is the purpose of the `auth` middleware?",
+                options: [
+                    "A) Encrypts all responses",
+                    "B) Ensures user is authenticated before accessing routes",
+                    "C) Validates request data",
+                    "D) Authorizes specific actions"
+                ],
+                correct: 1,
+                explanation: "The auth middleware checks if a user is authenticated. Unauthenticated users are redirected to login. Apply to routes or controllers to protect them."
+            },
+            {
+                category: "Middleware & Security",
+                question: "What is Laravel Sanctum used for?",
+                options: [
+                    "A) Database encryption",
+                    "B) API token authentication for SPAs and mobile apps",
+                    "C) File upload validation",
+                    "D) Session management"
+                ],
+                correct: 1,
+                explanation: "Sanctum provides lightweight API authentication via tokens or SPA cookie-based sessions. Simpler than Passport for first-party API authentication."
+            },
+            {
+                category: "Middleware & Security",
+                question: "What is the difference between Authentication and Authorization?",
+                options: [
+                    "A) They're the same thing",
+                    "B) Authentication verifies identity, Authorization checks permissions",
+                    "C) Authorization comes before Authentication",
+                    "D) Authentication is for APIs only"
+                ],
+                correct: 1,
+                explanation: "Authentication confirms WHO you are (login). Authorization determines WHAT you can do (permissions/policies). Laravel uses Guards for auth, Gates/Policies for authorization."
+            },
+            {
+                category: "Middleware & Security",
+                question: "What is a Policy in Laravel?",
+                options: [
+                    "A) Security configuration file",
+                    "B) Class that organizes authorization logic around a model",
+                    "C) Rate limiting rule",
+                    "D) Validation rule set"
+                ],
+                correct: 1,
+                explanation: "Policies organize authorization logic for a model. Methods like view(), create(), update(), delete() return true/false. Used with $this->authorize() or Gate::allows()."
+            },
+
+            // Queues & Jobs (43-46)
+            {
+                category: "Queues & Jobs",
+                question: "What is the purpose of Laravel Queues?",
+                options: [
+                    "A) To queue database queries",
+                    "B) To defer time-consuming tasks for background processing",
+                    "C) To manage user sessions",
+                    "D) To cache responses"
+                ],
+                correct: 1,
+                explanation: "Queues defer time-consuming tasks (emails, reports, API calls) to be processed asynchronously by queue workers, improving response times for users."
+            },
+            {
+                category: "Queues & Jobs",
+                question: "What command processes queued jobs?",
+                options: [
+                    "A) php artisan queue:run",
+                    "B) php artisan queue:work",
+                    "C) php artisan jobs:process",
+                    "D) php artisan worker:start"
+                ],
+                correct: 1,
+                explanation: "php artisan queue:work starts a worker that processes jobs. Use queue:listen during development (restarts on code changes) or Supervisor in production."
+            },
+            {
+                category: "Queues & Jobs",
+                question: "What happens when a queued job fails?",
+                options: [
+                    "A) The application crashes",
+                    "B) It's retried based on $tries property, then moved to failed_jobs table",
+                    "C) It's deleted immediately",
+                    "D) The queue stops processing"
+                ],
+                correct: 1,
+                explanation: "Failed jobs are retried ($tries property controls attempts, $backoff controls delay). After max retries, they're stored in failed_jobs table. Implement failed() method for cleanup."
+            },
+            {
+                category: "Queues & Jobs",
+                question: "What is a Job in Laravel?",
+                options: [
+                    "A) A scheduled task",
+                    "B) A class representing a task that can be queued",
+                    "C) A database record",
+                    "D) A background process"
+                ],
+                correct: 1,
+                explanation: "A Job is a class implementing ShouldQueue with a handle() method containing the task logic. Dispatch with dispatch() helper or MyJob::dispatch()."
+            },
+
+            // Testing & Advanced (47-50)
+            {
+                category: "Testing & Advanced",
+                question: "What is the Service Container in Laravel?",
+                options: [
+                    "A) A Docker container for Laravel",
+                    "B) A powerful tool for managing class dependencies and performing dependency injection",
+                    "C) A service for storing files",
+                    "D) A container for microservices"
+                ],
+                correct: 1,
+                explanation: "The Service Container (IoC Container) manages class dependencies through dependency injection. It automatically resolves dependencies, enables binding interfaces to implementations, and facilitates testing."
+            },
+            {
+                category: "Testing & Advanced",
+                question: "What is the difference between Unit and Feature tests?",
+                options: [
+                    "A) Unit tests are faster",
+                    "B) Unit tests test isolated code, Feature tests test HTTP requests/full features",
+                    "C) Feature tests don't use databases",
+                    "D) Unit tests are for frontend only"
+                ],
+                correct: 1,
+                explanation: "Unit tests test isolated classes/methods without bootstrapping Laravel. Feature tests boot the application, test HTTP endpoints, and can interact with databases."
+            },
+            {
+                category: "Testing & Advanced",
+                question: "What does `RefreshDatabase` trait do in tests?",
+                options: [
+                    "A) Clears the cache",
+                    "B) Resets the database to a clean state after each test",
+                    "C) Refreshes database connections",
+                    "D) Updates database credentials"
+                ],
+                correct: 1,
+                explanation: "RefreshDatabase runs migrations before tests and rolls back after each test using transactions, ensuring a clean database state. Alternative: DatabaseMigrations runs fresh migrations each test."
+            },
+            {
+                category: "Testing & Advanced",
+                question: "What is Laravel Horizon?",
+                options: [
+                    "A) A frontend framework",
+                    "B) A dashboard and configuration system for Redis queues",
+                    "C) A deployment tool",
+                    "D) A testing framework"
+                ],
+                correct: 1,
+                explanation: "Horizon provides a beautiful dashboard and code-driven configuration for Redis queues. It offers real-time metrics, job monitoring, and queue balancing strategies."
+            }
+        ];
+
+        let currentQuestion = 0;
+        let score = 0;
+        let answered = new Array(questions.length).fill(null);
+        let showExplanation = false;
+
+        function render() {
+            const app = document.getElementById('app');
+            const q = questions[currentQuestion];
+            const progress = ((currentQuestion + 1) / questions.length) * 100;
+            
+            app.innerHTML = `
+                <div class="bg-slate-800/50 backdrop-blur rounded-2xl p-6 shadow-xl border border-slate-700/50">
+                    <!-- Progress Bar -->
+                    <div class="mb-6">
+                        <div class="flex justify-between text-sm text-slate-400 mb-2">
+                            <span>Question ${currentQuestion + 1} of ${questions.length}</span>
+                            <span>Score: ${score}/${questions.length}</span>
+                        </div>
+                        <div class="h-2 bg-slate-700 rounded-full overflow-hidden">
+                            <div class="h-full bg-gradient-to-r from-red-500 to-pink-500 transition-all duration-300" style="width: ${progress}%"></div>
+                        </div>
+                    </div>
+
+                    <!-- Category Badge -->
+                    <div class="mb-4">
+                        <span class="px-3 py-1 bg-purple-500/20 text-purple-300 rounded-full text-sm">${q.category}</span>
+                    </div>
+
+                    <!-- Question -->
+                    <h2 class="text-xl font-semibold mb-6">${q.question}</h2>
+
+                    <!-- Options -->
+                    <div class="space-y-3 mb-6">
+                        ${q.options.map((opt, i) => {
+                            let classes = 'w-full text-left p-4 rounded-xl border transition-all duration-200 ';
+                            if (answered[currentQuestion] !== null) {
+                                if (i === q.correct) {
+                                    classes += 'bg-green-500/20 border-green-500 text-green-300';
+                                } else if (i === answered[currentQuestion] && i !== q.correct) {
+                                    classes += 'bg-red-500/20 border-red-500 text-red-300';
+                                } else {
+                                    classes += 'bg-slate-700/30 border-slate-600 text-slate-400';
+                                }
+                            } else {
+                                classes += 'bg-slate-700/50 border-slate-600 hover:border-purple-500 hover:bg-slate-700';
+                            }
+                            return `<button onclick="selectAnswer(${i})" class="${classes}" ${answered[currentQuestion] !== null ? 'disabled' : ''}>${opt}</button>`;
+                        }).join('')}
+                    </div>
+
+                    <!-- Explanation -->
+                    ${answered[currentQuestion] !== null ? `
+                        <div class="fade-in bg-slate-700/30 rounded-xl p-4 mb-6 border border-slate-600">
+                            <div class="flex items-start gap-2">
+                                <span class="text-yellow-400">💡</span>
+                                <p class="text-slate-300">${q.explanation}</p>
+                            </div>
+                        </div>
+                    ` : ''}
+
+                    <!-- Navigation -->
+                    <div class="flex justify-between items-center">
+                        <button onclick="prevQuestion()" class="px-4 py-2 rounded-lg ${currentQuestion === 0 ? 'text-slate-500 cursor-not-allowed' : 'text-slate-300 hover:bg-slate-700'}" ${currentQuestion === 0 ? 'disabled' : ''}>
+                            ← Previous
+                        </button>
+                        
+                        <div class="flex gap-1">
+                            ${questions.map((_, i) => `
+                                <button onclick="goToQuestion(${i})" class="w-2 h-2 rounded-full transition-all ${i === currentQuestion ? 'bg-purple-500 w-4' : answered[i] !== null ? (answered[i] === questions[i].correct ? 'bg-green-500' : 'bg-red-500') : 'bg-slate-600 hover:bg-slate-500'}"></button>
+                            `).join('')}
+                        </div>
+
+                        ${currentQuestion === questions.length - 1 ? `
+                            <button onclick="showResults()" class="px-4 py-2 rounded-lg bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 font-medium">
+                                See Results
+                            </button>
+                        ` : `
+                            <button onclick="nextQuestion()" class="px-4 py-2 rounded-lg text-slate-300 hover:bg-slate-700">
+                                Next →
+                            </button>
+                        `}
+                    </div>
+                </div>
+
+                <!-- Quick Stats -->
+                <div class="mt-4 flex justify-center gap-4 text-sm text-slate-400">
+                    <span>✓ ${answered.filter((a, i) => a === questions[i].correct).length} correct</span>
+                    <span>✗ ${answered.filter((a, i) => a !== null && a !== questions[i].correct).length} incorrect</span>
+                    <span>○ ${answered.filter(a => a === null).length} remaining</span>
+                </div>
+            `;
+        }
+
+        function selectAnswer(index) {
+            if (answered[currentQuestion] !== null) return;
+            answered[currentQuestion] = index;
+            if (index === questions[currentQuestion].correct) {
+                score++;
+            }
+            render();
+        }
+
+        function nextQuestion() {
+            if (currentQuestion < questions.length - 1) {
+                currentQuestion++;
+                render();
+            }
+        }
+
+        function prevQuestion() {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                render();
+            }
+        }
+
+        function goToQuestion(index) {
+            currentQuestion = index;
+            render();
+        }
+
+        function showResults() {
+            const app = document.getElementById('app');
+            const percentage = Math.round((score / questions.length) * 100);
+            const categories = {};
+            
+            questions.forEach((q, i) => {
+                if (!categories[q.category]) {
+                    categories[q.category] = { correct: 0, total: 0 };
+                }
+                categories[q.category].total++;
+                if (answered[i] === q.correct) {
+                    categories[q.category].correct++;
+                }
+            });
+
+            let grade, gradeColor, message;
+            if (percentage >= 90) { grade = 'A+'; gradeColor = 'text-green-400'; message = 'Outstanding! You\'re Laravel-ready! 🚀'; }
+            else if (percentage >= 80) { grade = 'A'; gradeColor = 'text-green-400'; message = 'Excellent work! Very solid knowledge.'; }
+            else if (percentage >= 70) { grade = 'B'; gradeColor = 'text-yellow-400'; message = 'Good job! Review the missed topics.'; }
+            else if (percentage >= 60) { grade = 'C'; gradeColor = 'text-orange-400'; message = 'Decent, but more practice needed.'; }
+            else { grade = 'D'; gradeColor = 'text-red-400'; message = 'Keep studying! You\'ll get there.'; }
+
+            app.innerHTML = `
+                <div class="bg-slate-800/50 backdrop-blur rounded-2xl p-8 shadow-xl border border-slate-700/50 text-center fade-in">
+                    <h2 class="text-3xl font-bold mb-2">Quiz Complete!</h2>
+                    <p class="text-slate-400 mb-6">${message}</p>
+                    
+                    <div class="text-8xl font-bold ${gradeColor} mb-2">${grade}</div>
+                    <div class="text-2xl text-slate-300 mb-8">${score}/${questions.length} (${percentage}%)</div>
+
+                    <div class="bg-slate-700/30 rounded-xl p-4 mb-6 text-left">
+                        <h3 class="font-semibold mb-3 text-slate-300">Performance by Category:</h3>
+                        ${Object.entries(categories).map(([cat, data]) => {
+                            const pct = Math.round((data.correct / data.total) * 100);
+                            return `
+                                <div class="mb-2">
+                                    <div class="flex justify-between text-sm mb-1">
+                                        <span class="text-slate-400">${cat}</span>
+                                        <span class="${pct >= 70 ? 'text-green-400' : pct >= 50 ? 'text-yellow-400' : 'text-red-400'}">${data.correct}/${data.total}</span>
+                                    </div>
+                                    <div class="h-2 bg-slate-600 rounded-full overflow-hidden">
+                                        <div class="h-full ${pct >= 70 ? 'bg-green-500' : pct >= 50 ? 'bg-yellow-500' : 'bg-red-500'}" style="width: ${pct}%"></div>
+                                    </div>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+
+                    <div class="flex gap-4 justify-center">
+                        <button onclick="reviewMissed()" class="px-6 py-3 rounded-xl bg-slate-700 hover:bg-slate-600 font-medium">
+                            Review Missed
+                        </button>
+                        <button onclick="restart()" class="px-6 py-3 rounded-xl bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 font-medium">
+                            Try Again
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function reviewMissed() {
+            const missedIndex = answered.findIndex((a, i) => a !== null && a !== questions[i].correct);
+            if (missedIndex !== -1) {
+                currentQuestion = missedIndex;
+                render();
+            }
+        }
+
+        function restart() {
+            currentQuestion = 0;
+            score = 0;
+            answered = new Array(questions.length).fill(null);
+            render();
+        }
+
+        render();
+    </script>
+</body>
+</html>
